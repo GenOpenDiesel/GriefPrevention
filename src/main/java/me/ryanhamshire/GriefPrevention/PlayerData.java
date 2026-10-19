@@ -18,6 +18,7 @@
 
 package me.ryanhamshire.GriefPrevention;
 
+import com.griefprevention.integration.PvPManagerIntegration;
 import com.griefprevention.visualization.BoundaryVisualization;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -132,6 +133,14 @@ public class PlayerData
     //whether or not this player is "in" pvp combat
     public boolean inPvpCombat()
     {
+        PvPManagerIntegration integration = GriefPrevention.instance == null
+                ? null : GriefPrevention.instance.getPvpManagerIntegration();
+        if (integration != null)
+        {
+            Boolean inCombat = integration.isInCombat(this.playerID);
+            if (inCombat != null) return inCombat;
+        }
+
         if (this.lastPvpTimestamp == 0) return false;
 
         long now = Calendar.getInstance().getTimeInMillis();

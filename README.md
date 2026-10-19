@@ -23,6 +23,10 @@ Stop _responding_ to grief and prevent it instead. GriefPrevention stops grief b
 Other server implementations of the Bukkit API _should_ work, but are untested.
 
 ## Download
+### PvPManager fork
+ChanceSD PvPManager 4.x integration: shared combat status, single logout punishment, no player fishing-hook tagging.
+Player hooking is blocked while PvPManager is enabled. [Installation and verification](PVPMANAGER.md).
+
 ### [Download the GriefPrevention.jar plugin here.](https://github.com/GriefPrevention/GriefPrevention/releases/)
 
 ## Addons

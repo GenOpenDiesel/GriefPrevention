@@ -21,6 +21,7 @@ package me.ryanhamshire.GriefPrevention;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.griefprevention.commands.ClaimCommand;
+import com.griefprevention.integration.PvPManagerIntegration;
 import com.griefprevention.metrics.MetricsHandler;
 import com.griefprevention.platform.knockback.KnockbackProtectionListener;
 import com.griefprevention.protection.InteractionProtectionHandler;
@@ -97,6 +98,12 @@ public class GriefPrevention extends JavaPlugin
     // Event handlers with common functionality
     EntityEventHandler entityEventHandler;
     EntityDamageHandler entityDamageHandler;
+    private PvPManagerIntegration pvpManagerIntegration;
+
+    public @Nullable PvPManagerIntegration getPvpManagerIntegration()
+    {
+        return pvpManagerIntegration;
+    }
 
     //this tracks item stacks expected to drop which will need protection
     ArrayList<PendingItemProtection> pendingItemWatchList = new ArrayList<>();
@@ -345,6 +352,9 @@ public class GriefPrevention extends JavaPlugin
 
         //register for events
         PluginManager pluginManager = this.getServer().getPluginManager();
+
+        pvpManagerIntegration = new PvPManagerIntegration(this);
+        pluginManager.registerEvents(pvpManagerIntegration, this);
 
         //player events
         playerEventHandler = new PlayerEventHandler(this.dataStore, this);

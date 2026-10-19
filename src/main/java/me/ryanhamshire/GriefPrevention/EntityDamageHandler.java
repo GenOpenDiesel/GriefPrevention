@@ -13,6 +13,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.EvokerFangs;
 import org.bukkit.entity.Explosive;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
@@ -800,6 +801,7 @@ public class EntityDamageHandler implements Listener
 
         // If there is no damage (snowballs, eggs, etc.) or the defender is not a player in a PVP world, do nothing.
         if (event.getDamage() == 0
+                || event.getDamager() instanceof FishHook
                 || !(event.getEntity() instanceof Player defender)
                 || !instance.pvpRulesApply(defender.getWorld())) return;
 

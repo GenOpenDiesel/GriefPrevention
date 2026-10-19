@@ -18,6 +18,7 @@
 
 package me.ryanhamshire.GriefPrevention;
 
+import com.griefprevention.integration.PvPManagerIntegration;
 import com.griefprevention.protection.ProtectionHelper;
 import com.griefprevention.util.command.MonitorableCommand;
 import com.griefprevention.util.command.MonitoredCommands;
@@ -910,7 +911,7 @@ class PlayerEventHandler implements Listener
         }
 
         //FEATURE: players in pvp combat when they log out will die
-        if (instance.config_pvp_punishLogout && playerData.inPvpCombat())
+        if (instance.config_pvp_punishLogout && !PvPManagerIntegration.isEnabled() && playerData.inPvpCombat())
         {
             player.setHealth(0);
         }
