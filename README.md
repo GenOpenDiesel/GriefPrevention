@@ -26,6 +26,8 @@ Other server implementations of the Bukkit API _should_ work, but are untested.
 ### PvPManager fork
 ChanceSD PvPManager 4.x integration: shared combat status, single logout punishment, no player fishing-hook tagging.
 Player hooking is blocked while PvPManager is enabled. [Installation and verification](PVPMANAGER.md).
+WorldGuard 7.x protection now also prevents creating or expanding player claims into protected regions.
+[WorldGuard settings and verification](WORLDGUARD.md).
 
 ### [Download the GriefPrevention.jar plugin here.](https://github.com/GriefPrevention/GriefPrevention/releases/)
 

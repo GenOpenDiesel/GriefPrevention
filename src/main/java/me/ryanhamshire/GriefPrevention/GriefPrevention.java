@@ -22,6 +22,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.griefprevention.commands.ClaimCommand;
 import com.griefprevention.integration.PvPManagerIntegration;
+import com.griefprevention.integration.WorldGuardIntegration;
 import com.griefprevention.metrics.MetricsHandler;
 import com.griefprevention.platform.knockback.KnockbackProtectionListener;
 import com.griefprevention.protection.InteractionProtectionHandler;
@@ -78,6 +79,7 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,6 +101,13 @@ public class GriefPrevention extends JavaPlugin
     EntityEventHandler entityEventHandler;
     EntityDamageHandler entityDamageHandler;
     private PvPManagerIntegration pvpManagerIntegration;
+    private BiPredicate<Claim, Player> worldGuardClaimCheck;
+
+    public boolean canCreateClaim(Claim claim, @Nullable Player player)
+    {
+        return !config_claims_respectWorldGuard || player == null || worldGuardClaimCheck == null
+                || worldGuardClaimCheck.test(claim, player);
+    }
 
     public @Nullable PvPManagerIntegration getPvpManagerIntegration()
     {
@@ -155,6 +164,7 @@ public class GriefPrevention extends JavaPlugin
 
     public Material config_claims_investigationTool;                //which material will be used to investigate claims with a right click
     public Material config_claims_modificationTool;                    //which material will be used to create/resize claims with a right click
+    public boolean config_claims_respectWorldGuard;
 
     public ArrayList<String> config_claims_commandsRequiringAccessTrust; //the list of slash commands requiring access trust when in a claim
     public boolean config_claims_supplyPlayerManual;                //whether to give new players a book with land claim help in it
@@ -352,6 +362,21 @@ public class GriefPrevention extends JavaPlugin
 
         //register for events
         PluginManager pluginManager = this.getServer().getPluginManager();
+
+        worldGuardClaimCheck = null;
+        if (pluginManager.isPluginEnabled("WorldGuard"))
+        {
+            worldGuardClaimCheck = (claim, player) -> false;
+            try
+            {
+                worldGuardClaimCheck = new WorldGuardIntegration(this);
+                getLogger().info("WorldGuard claim protection enabled.");
+            }
+            catch (RuntimeException | LinkageError error)
+            {
+                getLogger().severe("WorldGuard integration failed; player claim creation blocked: " + error);
+            }
+        }
 
         pvpManagerIntegration = new PvPManagerIntegration(this);
         pluginManager.registerEvents(pvpManagerIntegration, this);
@@ -562,6 +587,7 @@ public class GriefPrevention extends JavaPlugin
         this.config_claims_claimsExtendIntoGroundDistance = Math.abs(config.getInt("GriefPrevention.Claims.ExtendIntoGroundDistance", 5));
         this.config_claims_minWidth = config.getInt("GriefPrevention.Claims.MinimumWidth", 5);
         this.config_claims_minArea = config.getInt("GriefPrevention.Claims.MinimumArea", 100);
+        this.config_claims_respectWorldGuard = config.getBoolean("GriefPrevention.Claims.CreationRequiresWorldGuardBuildPermission", true);
 
         this.config_claims_minY = config.getInt("GriefPrevention.Claims.MinimumY", Integer.MIN_VALUE);
         // Warn if MinimumY is set above sea level, as this is likely unintended
@@ -758,6 +784,7 @@ public class GriefPrevention extends JavaPlugin
         outConfig.set("GriefPrevention.Claims.ExtendIntoGroundDistance", this.config_claims_claimsExtendIntoGroundDistance);
         outConfig.set("GriefPrevention.Claims.MinimumWidth", this.config_claims_minWidth);
         outConfig.set("GriefPrevention.Claims.MinimumArea", this.config_claims_minArea);
+        outConfig.set("GriefPrevention.Claims.CreationRequiresWorldGuardBuildPermission", this.config_claims_respectWorldGuard);
         outConfig.set("GriefPrevention.Claims.MinimumY", this.config_claims_minY);
         outConfig.set("GriefPrevention.Claims.InvestigationTool", this.config_claims_investigationTool.name());
         outConfig.set("GriefPrevention.Claims.ModificationTool", this.config_claims_modificationTool.name());

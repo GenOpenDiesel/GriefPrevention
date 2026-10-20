@@ -924,6 +924,9 @@ public abstract class DataStore
             }
         }
 
+        // Check before dry runs as resizing validates its new boundary through this path.
+        if (!GriefPrevention.instance.canCreateClaim(newClaim, creatingPlayer)) return result;
+
         if (dryRun)
         {
             // since this is a dry run, just return the unsaved claim as is.
