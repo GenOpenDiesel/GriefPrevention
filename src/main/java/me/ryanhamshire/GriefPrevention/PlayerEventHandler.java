@@ -1009,7 +1009,7 @@ class PlayerEventHandler implements Listener
     }
 
     //when a player teleports
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onPlayerTeleport(PlayerTeleportEvent event)
     {
         //FEATURE: prevent players from using ender pearls or chorus fruit to gain access to secured claims

@@ -28,6 +28,8 @@ ChanceSD PvPManager 4.x integration: shared combat status, single logout punishm
 Player hooking is blocked while PvPManager is enabled. [Installation and verification](PVPMANAGER.md).
 WorldGuard 7.x protection now also prevents creating or expanding player claims into protected regions.
 [WorldGuard settings and verification](WORLDGUARD.md).
+Pearls are blocked on claims and endermites cannot damage players inside claims.
+[Ender pearl protection settings](ENDER_PEARLS.md).
 
 ### [Download the GriefPrevention.jar plugin here.](https://github.com/GriefPrevention/GriefPrevention/releases/)
 
