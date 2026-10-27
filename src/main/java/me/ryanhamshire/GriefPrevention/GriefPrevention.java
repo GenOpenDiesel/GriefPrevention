@@ -24,6 +24,7 @@ import com.griefprevention.commands.ClaimCommand;
 import com.griefprevention.integration.PvPManagerIntegration;
 import com.griefprevention.integration.WorldGuardIntegration;
 import com.griefprevention.metrics.MetricsHandler;
+import com.griefprevention.platform.cushion.CushionProtectionListener;
 import com.griefprevention.platform.knockback.KnockbackProtectionListener;
 import com.griefprevention.protection.EnderPearlProtectionHandler;
 import com.griefprevention.protection.InteractionProtectionHandler;
@@ -404,6 +405,7 @@ public class GriefPrevention extends JavaPlugin
 
         //knockback protection - handles melee, projectile, and other player-caused knockback in claims
         new KnockbackProtectionListener(this.dataStore, this).register(this);
+        new CushionProtectionListener().register(this);
 
         //special interaction-related events
         pluginManager.registerEvents(new InteractionProtectionHandler(), this);
